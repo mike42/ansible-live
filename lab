@@ -2,7 +2,7 @@
 #
 # lab.sh: main entry point for ansible-live demo environment
 #
-set -ex
+set -e
 
 function setup {
   # Install containers with ansible, sudo password prompt only if required

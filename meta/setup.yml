@@ -9,7 +9,6 @@
     - lxc
     - lxc-dev
     - python-pip
-    - yamllint
 
   - service:
       name: lxc-net
@@ -21,6 +20,7 @@
     with_items:
     - lxc-python2
     - ansible-lint
+    - yamllint
     run_once: true
 
 - hosts: all
