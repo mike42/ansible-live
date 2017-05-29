@@ -11,6 +11,10 @@
     - python-pip
     - yamllint
 
+  - service:
+      name: lxc-net
+      state: running
+
   - name: pip lxc packages are installed on host
     pip:
       name: "{{ item }}"

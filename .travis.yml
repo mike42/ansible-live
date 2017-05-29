@@ -9,10 +9,6 @@ before_install:
   - sudo apt-get install ansible -y
   # Create local SSH key
   - ssh-keygen -b 2048 -t rsa -f ~/.ssh/id_rsa -q -N ""
-  # Debug info
-  - cat /etc/default/lxc-net
-  - cat /etc/lxc/default.conf
-  - ip addr show
 
 script:
   - ./lab setup
