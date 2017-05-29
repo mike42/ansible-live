@@ -16,4 +16,6 @@ script:
   - service lxc-net status || true
   - service lxc-net start || true
   - service lxc-net status || true
-  - sudo lxc-create -t debian -n debian1 || true
+  - (cd meta && ansible-playbook -i inventory setup.yml) || true
+  - ansible -i meta/inventory -m command -a 'ip addr show' all -u root || true
+  - (cd meta && ansible-playbook -i inventory teardown.yml) || true

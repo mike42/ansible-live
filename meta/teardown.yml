@@ -1,0 +1,10 @@
+- hosts: all
+  connection: local
+  become: true
+  tasks:
+  - name: Containers do not exist
+    delegate_to: localhost
+    lxc_container:
+      name: "{{ inventory_hostname }}"
+      state: absent
+
