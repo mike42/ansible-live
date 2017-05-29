@@ -12,4 +12,10 @@ script:
   - cat /etc/default/lxc-net || true
   - cat /etc/lxc/default.conf || true
   - ip addr show || true
-  - systemctl status lxc-net || true
+  - service status lxc-net || true
+  - service start lxc-net || true
+  - service status lxc-net || true
+  - ls ~/.ssh || true
+  - ssh-keygen -b 2048 -t rsa -f ~/.ssh/id_rsa -q -N "" || true
+  - ls ~/.ssh || true
+  - sudo lxc-create -t debian -n debian1 || true
