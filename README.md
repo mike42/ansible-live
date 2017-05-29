@@ -1,7 +1,8 @@
 # Ansible live [![Build Status](https://travis-ci.org/mike42/ansible-live.svg?branch=master)](https://travis-ci.org/mike42/ansible-live)
 
-This repository is a demonstration and training environment for Ansible, to
-be executed on an Ubuntu 14.04 or Debian 8+ control machine with Ansible 2 or better.
+This repository provides a demonstration and training environment for the Ansible
+automatio tool, to be executed on an Ubuntu 14.04 or Debian 8+ control machine
+with Ansible 2 or better.
 
 You require Ansible and local `sudo` access to use the environment, as some extra
 packages are added for LXC.
