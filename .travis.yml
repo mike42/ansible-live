@@ -9,5 +9,7 @@ before_install:
   - sudo apt-get install lxc -y
 
 script:
-  - true
-
+  - cat /etc/default/lxc-net || true
+  - cat /etc/lxc/default.conf || true
+  - ip addr show || true
+  - systemctl status lxc-net || true
