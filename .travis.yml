@@ -5,17 +5,15 @@ before_install:
   - sudo apt-get install software-properties-common -y
   - sudo apt-add-repository ppa:ansible/ansible -y
   - sudo apt-get update
-  - sudo apt-get install ansible -y
-  - sudo apt-get install lxc -y
+  - sudo apt-get install ansible lxc -y
+  - ssh-keygen -b 2048 -t rsa -f ~/.ssh/id_rsa -q -N "" || true
+  # Debug info
+  - cat /etc/default/lxc-net
+  - cat /etc/lxc/default.conf
+  - ip addr show
 
 script:
-  - cat /etc/default/lxc-net || true
-  - cat /etc/lxc/default.conf || true
-  - ip addr show || true
-  - service status lxc-net || true
-  - service start lxc-net || true
-  - service status lxc-net || true
-  - ls ~/.ssh || true
-  - ssh-keygen -b 2048 -t rsa -f ~/.ssh/id_rsa -q -N "" || true
-  - ls ~/.ssh || true
+  - service lxc-net status || true
+  - service lxc-net start || true
+  - service lxc-net status || true
   - sudo lxc-create -t debian -n debian1 || true
