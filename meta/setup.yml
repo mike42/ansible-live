@@ -3,15 +3,20 @@
   connection: local
   become: true
   tasks:
-  - name: lxc packages are installed
+  - name: apt lxc packages are installed on host
     apt: name={{ item }}
     with_items:
     - lxc
     - lxc-dev
     - python-pip
+    - yamllint
 
-  - name: lxc-python2 is installed
-    pip: name=lxc-python2
+  - name: pip lxc packages are installed on host
+    pip:
+      name: "{{ item }}"
+    with_items:
+    - lxc-python2
+    - ansible-lint
     run_once: true
 
 - hosts: all

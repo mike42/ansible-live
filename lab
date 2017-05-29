@@ -1,0 +1,38 @@
+#!/bin/bash
+#
+# lab.sh: main entry point for ansible-live demo environment
+#
+set -ex
+
+function setup {
+  # Install containers with ansible, sudo password prompt only if required
+  ANSIBLE_ARGS="-i inventory setup.yml"
+  if ! sudo -n true 2> /dev/null; then
+    ANSIBLE_ARGS="$ANSIBLE_ARGS -K"
+  fi
+  (cd meta && \
+    ansible-playbook ${ANSIBLE_ARGS}
+    ansible -i inventory -m command -a 'ip addr show' -u root all)
+}
+
+function teardown {
+  # Destroy containers with ansible, sudo password prompt only if required
+  ANSIBLE_ARGS="-i inventory teardown.yml"
+  if ! sudo -n true 2> /dev/null; then
+    ANSIBLE_ARGS="$ANSIBLE_ARGS -K"
+  fi
+  (cd meta && ansible-playbook ${ANSIBLE_ARGS})
+}
+
+# Switch for valid options
+case "$1" in
+setup)
+  setup
+  ;;
+teardown)
+  teardown
+  ;;
+*)
+  echo $"Usage: $0 {setup|teardown}"
+  exit 1
+esac

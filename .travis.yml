@@ -2,20 +2,18 @@ dist: trusty
 sudo: required
 
 before_install:
+  # Install Ansinle
   - sudo apt-get install software-properties-common -y
   - sudo apt-add-repository ppa:ansible/ansible -y
   - sudo apt-get update
-  - sudo apt-get install ansible lxc -y
-  - ssh-keygen -b 2048 -t rsa -f ~/.ssh/id_rsa -q -N "" || true
+  - sudo apt-get install ansible -y
+  # Create local SSH key
+  - ssh-keygen -b 2048 -t rsa -f ~/.ssh/id_rsa -q -N ""
   # Debug info
   - cat /etc/default/lxc-net
   - cat /etc/lxc/default.conf
   - ip addr show
 
 script:
-  - service lxc-net status || true
-  - service lxc-net start || true
-  - service lxc-net status || true
-  - (cd meta && ansible-playbook -i inventory setup.yml) || true
-  - ansible -i meta/inventory -m command -a 'ip addr show' all -u root || true
-  - (cd meta && ansible-playbook -i inventory teardown.yml) || true
+  - ./lab setup
+  - ./lab teardown
