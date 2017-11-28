@@ -24,6 +24,32 @@ function teardown {
   (cd meta && ansible-playbook ${ANSIBLE_ARGS})
 }
 
+function run {
+  LAB="$1"
+  VSPACE=5
+  HSPACE=15
+  HSPACES=$(head -c ${HSPACE} < /dev/zero | tr '\0' ' ')
+
+  (cd $LAB &&
+    if [ -f intro.txt ]; then
+      # Intro panel
+      clear;
+      head -c ${VSPACE} < /dev/zero | tr '\0' '\n';
+      sed -e "s/^/$HSPACES/" -e "s/$/$HSPACES/" intro.txt;
+      echo $VSPACES;
+      head -c ${VSPACE} < /dev/zero | tr '\0' '\n';
+      read -n 1 -s -p "";
+    fi
+    tmux -f ../.tmux.conf new-session -s ansible-lab -n "$LAB" -d &&
+    tmux send-keys -t ansible-lab:"$LAB".0 "mdp -i ${LAB}.md" C-j &&
+    tmux split-window -h &&
+    tmux send-keys -t 1 'PS1="\[\033[01;32m\]\u\[\033[00m\]:\[\033[01;34m\]'${LAB}'\[\033[00m\]\$ "' C-j "cd content" C-j "clear" C-j &&
+    tmux select-pane -t 0 &&
+    tmux attach -t ansible-lab
+  )
+  echo "Lab done"
+}
+
 # Switch for valid options
 case "$1" in
 setup)
@@ -32,7 +58,10 @@ setup)
 teardown)
   teardown
   ;;
+run)
+  run "$2"
+  ;;
 *)
-  echo $"Usage: $0 {setup|teardown}"
+  echo $"Usage: $0 {setup|teardown|run}"
   exit 1
 esac
