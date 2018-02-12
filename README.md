@@ -12,7 +12,7 @@ packages are added for LXC.
 To begin, install Ansible and git, and clone this repository.
 
 ```bash
-apt-get install ansible git
+sudo apt-get install ansible git
 git clone https://github.com/mike42/ansible-live
 cd ansible-live
 ```

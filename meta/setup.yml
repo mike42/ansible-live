@@ -64,7 +64,7 @@
       container_log: true
       template: debian
       state: started
-      template_options: --release jessie
+      template_options: --release stretch
       container_config:
         - "lxc.network.type = veth"
         - "lxc.network.flags = up"
@@ -75,6 +75,7 @@
         if [ ! -d ~/.ssh ]; then
           mkdir ~/.ssh
           echo "{{ lookup('file', my_ssh_key) }}" | tee -a ~/.ssh/authorized_keys
+          sed -i 's/dhcp/manual/' /etc/network/interfaces && systemctl restart network
         fi
 
 - hosts: all
@@ -93,4 +94,4 @@
   - ansible_user: root
   tasks:
   - name: install python on target machines
-    raw: apt-get install -y python
+    raw: which python || (apt-get -y update && apt-get install -y python)
