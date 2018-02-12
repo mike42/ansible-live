@@ -28,7 +28,7 @@
 
   - service:
       name: lxc-net
-      state: running
+      state: started
 
   - name: pip lxc packages are installed on host
     pip:
