@@ -50,7 +50,7 @@
       container_log: true
       template: debian
       state: started
-      template_options: --release jessie
+      template_options: --release stretch
       container_config:
         - "lxc.network.type = veth"
         - "lxc.network.flags = up"
@@ -79,4 +79,4 @@
   - ansible_user: root
   tasks:
   - name: install python on target machines
-    raw: which python || (apt-get update && apt-get install -y python)
+    raw: which python || (apt-get -y update && apt-get install -y python)
