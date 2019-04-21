@@ -79,4 +79,4 @@
   - ansible_user: root
   tasks:
   - name: install python on target machines
-    raw: apt-get install -y python
+    raw: which python || (apt-get update && apt-get install -y python)
