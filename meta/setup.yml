@@ -7,11 +7,14 @@
 
   tasks:
   - name: apt lxc packages are installed on host
-    apt: name={{ item }}
-    with_items:
-    - lxc
-    - lxc-dev
-    - python-pip
+    apt:
+      name:
+      - tmux
+      - mdp
+      - lxc
+      - lxc-dev
+      - python3-pip
+      state: present
 
   - copy:
       dest: /etc/default/lxc-net
@@ -32,9 +35,9 @@
 
   - name: pip lxc packages are installed on host
     pip:
-      name: "{{ item }}"
-    with_items:
-    - lxc-python2
+      name:
+      - ansible-lint
+      - yamllint
     run_once: true
 
 - hosts: all
