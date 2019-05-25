@@ -24,10 +24,10 @@
   - copy:
       dest: /etc/lxc/default.conf
       content: |
-        lxc.network.type = veth
-        lxc.network.link = {{ interface }}
-        lxc.network.flags = up
-        lxc.network.hwaddr = 00:16:3e:xx:xx:xx
+        lxc.net.0.type = veth
+        lxc.net.0.link = {{ interface }}
+        lxc.net.0.flags = up
+        lxc.net.0.hwaddr = 00:16:3e:xx:xx:xx
 
   - service:
       name: lxc-net
@@ -69,11 +69,11 @@
       state: started
       template_options: --release stretch
       container_config:
-        - "lxc.network.type = veth"
-        - "lxc.network.flags = up"
-        - "lxc.network.link = {{ interface }}"
-        - "lxc.network.ipv4 = {{ ansible_host }}/24"
-        - "lxc.network.ipv4.gateway = auto"
+        - "lxc.net.0.type = veth"
+        - "lxc.net.0.flags = up"
+        - "lxc.net.0.link = {{ interface }}"
+        - "lxc.net.0.ipv4.address = {{ ansible_host }}/24"
+        - "lxc.net.0.ipv4.gateway = auto"
       container_command: |
         if [ ! -d ~/.ssh ]; then
           mkdir ~/.ssh
@@ -89,7 +89,7 @@
   - wait_for: host={{ ansible_host }} port=22
 
   - name: container key is up-to-date locally
-    shell: ssh-keygen -R {{ ansible_host }}; (ssh-keyscan {{ ansible_host }} >> ~/.ssh/known_hosts)
+    shell: ssh-keygen -R {{ ansible_host }}; ssh-keygen -R {{ inventory_hostname }}; (ssh-keyscan {{ ansible_host }} {{ inventory_hostname }} >> ~/.ssh/known_hosts)
 
 - hosts: all
   gather_facts: no
