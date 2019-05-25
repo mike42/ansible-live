@@ -2,6 +2,9 @@
 - hosts: localhost
   connection: local
   become: true
+  vars:
+  - interface: lxcbr0
+
   tasks:
   - name: apt lxc packages are installed on host
     apt: name={{ item }}
@@ -10,17 +13,28 @@
     - lxc-dev
     - python-pip
 
+  - copy:
+      dest: /etc/default/lxc-net
+      content: |
+        USE_LXC_BRIDGE="true"
+
+  - copy:
+      dest: /etc/lxc/default.conf
+      content: |
+        lxc.network.type = veth
+        lxc.network.link = {{ interface }}
+        lxc.network.flags = up
+        lxc.network.hwaddr = 00:16:3e:xx:xx:xx
+
   - service:
       name: lxc-net
-      state: running
+      state: started
 
   - name: pip lxc packages are installed on host
     pip:
       name: "{{ item }}"
     with_items:
     - lxc-python2
-    - ansible-lint
-    - yamllint
     run_once: true
 
 - hosts: all
@@ -43,7 +57,7 @@
     changed_when: false
     run_once: true
 
-  - name: Containers exist and have local SSH key
+  - name: containers exist and have local SSH key
     delegate_to: localhost
     lxc_container:
       name: "{{ inventory_hostname }}"
@@ -61,6 +75,7 @@
         if [ ! -d ~/.ssh ]; then
           mkdir ~/.ssh
           echo "{{ lookup('file', my_ssh_key) }}" | tee -a ~/.ssh/authorized_keys
+          sed -i 's/dhcp/manual/' /etc/network/interfaces && systemctl restart network
         fi
 
 - hosts: all
@@ -70,7 +85,7 @@
   tasks:
   - wait_for: host={{ ansible_host }} port=22
 
-  - name: Container key is up-to-date locally
+  - name: container key is up-to-date locally
     shell: ssh-keygen -R {{ ansible_host }}; (ssh-keyscan {{ ansible_host }} >> ~/.ssh/known_hosts)
 
 - hosts: all
